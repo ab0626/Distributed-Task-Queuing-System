@@ -1,0 +1,45 @@
+version: '3'
+services:
+  api:
+    build: .
+    command: ["./api-server", "-mode=api"]
+    ports:
+      - "8081:8080"
+    environment:
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+
+  worker:
+    build: .
+    command: ["./api-server", "-mode=worker"]
+    environment:
+      - REDIS_ADDR=redis:6379
+    depends_on:
+      - redis
+    deploy:
+      replicas: 2
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  prometheus:
+    image: prom/prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml
+    depends_on:
+      - api
+      - worker
+
+  grafana:
+    image: grafana/grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
