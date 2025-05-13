@@ -21,6 +21,8 @@ A lightweight, high-performance task queue system built with **Go**, **Redis**, 
 - **Docker** – Containerized API and worker
 - **Prometheus** – System metrics
 - **Grafana** – Real-time dashboards
+- **PostgreSQL** – Persistent Result Storage
+- **Celery** – Scheduled Tasks
 
 ---
 
